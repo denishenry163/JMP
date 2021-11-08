@@ -1,0 +1,355 @@
+--------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  E:\Dropbox\Research\Ding's Proposal\WorkingFile\IPUMS\results\result_empt
+> opop_euIV.log
+  log type:  text
+ opened on:  22 Jan 2021, 13:26:03
+
+. ivreghdfe d_emp_ratio_0614 (er_us_emp06=er_eu) $demographic, absorb(occsoc) cluster(
+> state)
+(MWFE estimator converged in 1 iterations)
+
+IV (2SLS) estimation
+--------------------
+
+Estimates efficient for homoskedasticity only
+Statistics robust to heteroskedasticity and clustering on state
+
+Number of clusters (state) =        50                Number of obs =   126743
+                                                      F( 10,    49) =    39.29
+                                                      Prob > F      =   0.0000
+Total (centered) SS     =  .3729657684                Centered R2   =   0.0026
+Total (uncentered) SS   =  .3729657684                Uncentered R2 =   0.0026
+Residual SS             =  .3719824099                Root MSE      =  .001716
+
+---------------------------------------------------------------------------------
+                |               Robust
+d_emp_rati~0614 |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+----------------+----------------------------------------------------------------
+    er_us_emp06 |  -.0000176   8.90e-06    -1.98   0.053    -.0000355    2.38e-07
+     share_male |  -.0000806   .0000196    -4.11   0.000      -.00012   -.0000411
+    share_elder |   .0006065   .0000367    16.51   0.000     .0005327    .0006803
+   share_nocoll |   .0000247   .0000265     0.93   0.356    -.0000285    .0000779
+ share_somecoll |   .0000808   .0000352     2.30   0.026     .0000101    .0001516
+ share_collprof |   8.48e-06   .0000283     0.30   0.765    -.0000483    .0000653
+  share_mastdoc |   .0000156   .0000352     0.44   0.659     -.000055    .0000863
+ share_nonwhite |  -.0001312   .0000258    -5.08   0.000    -.0001831   -.0000793
+share_emp_manuf |   .0000441   .0000447     0.99   0.328    -.0000456    .0001339
+      ln_cz_pop |   .0000382   6.43e-06     5.94   0.000     .0000253    .0000511
+---------------------------------------------------------------------------------
+Underidentification test (Kleibergen-Paap rk LM statistic):              9.071
+                                                   Chi-sq(1) P-val =    0.0026
+------------------------------------------------------------------------------
+Weak identification test (Cragg-Donald Wald F statistic):             9622.063
+                         (Kleibergen-Paap rk Wald F statistic):         46.707
+Stock-Yogo weak ID test critical values: 10% maximal IV size             16.38
+                                         15% maximal IV size              8.96
+                                         20% maximal IV size              6.66
+                                         25% maximal IV size              5.53
+Source: Stock-Yogo (2005).  Reproduced by permission.
+NB: Critical values are for Cragg-Donald F statistic and i.i.d. errors.
+------------------------------------------------------------------------------
+Hansen J statistic (overidentification test of all instruments):         0.000
+                                                 (equation exactly identified)
+------------------------------------------------------------------------------
+Instrumented:         er_us_emp06
+Included instruments: share_male share_elder share_nocoll share_somecoll
+                      share_collprof share_mastdoc share_nonwhite
+                      share_emp_manuf ln_cz_pop
+Excluded instruments: er_eu
+Partialled-out:       _cons
+                      nb: total SS, model F and R2s are after partialling-out;
+                          any small-sample adjustments include partialled-out
+                          variables in regressor count K
+------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+-----------------------------------------------------+
+ Absorbed FE | Categories  - Redundant  = Num. Coefs |
+-------------+---------------------------------------|
+      occsoc |       446           0         446     |
+-----------------------------------------------------+
+
+. ivreghdfe d_emp_ratio_0614 (er_us_emp06 interaction=er_eu ///
+>    ivinteraction) hhi_new $demographic, absorb(occsoc) cluster(state)
+(MWFE estimator converged in 1 iterations)
+
+IV (2SLS) estimation
+--------------------
+
+Estimates efficient for homoskedasticity only
+Statistics robust to heteroskedasticity and clustering on state
+
+Number of clusters (state) =        50                Number of obs =   126743
+                                                      F( 12,    49) =    32.89
+                                                      Prob > F      =   0.0000
+Total (centered) SS     =  .3729657684                Centered R2   =   0.0027
+Total (uncentered) SS   =  .3729657684                Uncentered R2 =   0.0027
+Residual SS             =  .3719678824                Root MSE      =  .001716
+
+---------------------------------------------------------------------------------
+                |               Robust
+d_emp_rati~0614 |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+----------------+----------------------------------------------------------------
+    er_us_emp06 |  -.0000199   .0000123    -1.62   0.113    -.0000448    4.86e-06
+    interaction |   5.72e-10   1.60e-09     0.36   0.721    -2.63e-09    3.78e-09
+        hhi_new |   2.05e-09   4.64e-09     0.44   0.661    -7.28e-09    1.14e-08
+     share_male |  -.0000805   .0000197    -4.09   0.000    -.0001201   -.0000409
+    share_elder |   .0006065   .0000366    16.59   0.000      .000533    .0006799
+   share_nocoll |   .0000241   .0000263     0.92   0.364    -.0000287    .0000769
+ share_somecoll |   .0000806   .0000352     2.29   0.026     9.93e-06    .0001513
+ share_collprof |   9.06e-06   .0000283     0.32   0.751    -.0000479     .000066
+  share_mastdoc |   .0000163    .000035     0.46   0.644    -.0000541    .0000866
+ share_nonwhite |  -.0001317   .0000257    -5.13   0.000    -.0001833   -.0000801
+share_emp_manuf |   .0000403   .0000454     0.89   0.379    -.0000509    .0001315
+      ln_cz_pop |   .0000417   .0000101     4.14   0.000     .0000215     .000062
+---------------------------------------------------------------------------------
+Underidentification test (Kleibergen-Paap rk LM statistic):             12.097
+                                                   Chi-sq(1) P-val =    0.0005
+------------------------------------------------------------------------------
+Weak identification test (Cragg-Donald Wald F statistic):             3960.388
+                         (Kleibergen-Paap rk Wald F statistic):         31.725
+Stock-Yogo weak ID test critical values: 10% maximal IV size              7.03
+                                         15% maximal IV size              4.58
+                                         20% maximal IV size              3.95
+                                         25% maximal IV size              3.63
+Source: Stock-Yogo (2005).  Reproduced by permission.
+NB: Critical values are for Cragg-Donald F statistic and i.i.d. errors.
+------------------------------------------------------------------------------
+Hansen J statistic (overidentification test of all instruments):         0.000
+                                                 (equation exactly identified)
+------------------------------------------------------------------------------
+Instrumented:         er_us_emp06 interaction
+Included instruments: hhi_new share_male share_elder share_nocoll
+                      share_somecoll share_collprof share_mastdoc share_nonwhite
+                      share_emp_manuf ln_cz_pop
+Excluded instruments: er_eu ivinteraction
+Partialled-out:       _cons
+                      nb: total SS, model F and R2s are after partialling-out;
+                          any small-sample adjustments include partialled-out
+                          variables in regressor count K
+------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+-----------------------------------------------------+
+ Absorbed FE | Categories  - Redundant  = Num. Coefs |
+-------------+---------------------------------------|
+      occsoc |       446           0         446     |
+-----------------------------------------------------+
+
+.  
+. ivreghdfe d_emp_ratio_0614 (er_us_emp06 interaction=er_eu ///
+>    ivinteraction) hhi_new share_*, absorb(occsoc czone2000) cluster(state)
+(MWFE estimator converged in 6 iterations)
+
+IV (2SLS) estimation
+--------------------
+
+Estimates efficient for homoskedasticity only
+Statistics robust to heteroskedasticity and clustering on state
+
+Number of clusters (state) =        50                Number of obs =   126743
+                                                      F( 11,    49) =    37.32
+                                                      Prob > F      =   0.0000
+Total (centered) SS     =  .3695926671                Centered R2   =   0.0019
+Total (uncentered) SS   =  .3695926671                Uncentered R2 =   0.0019
+Residual SS             =  .3688738179                Root MSE      =  .001709
+
+---------------------------------------------------------------------------------
+                |               Robust
+d_emp_rati~0614 |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+----------------+----------------------------------------------------------------
+    er_us_emp06 |  -.0000238   .0000132    -1.80   0.078    -.0000504    2.75e-06
+    interaction |   6.32e-10   1.64e-09     0.39   0.701    -2.66e-09    3.92e-09
+        hhi_new |   3.40e-09   4.41e-09     0.77   0.445    -5.47e-09    1.23e-08
+     share_male |  -.0000853   .0000179    -4.77   0.000    -.0001213   -.0000494
+    share_elder |   .0006105   .0000348    17.56   0.000     .0005406    .0006803
+   share_nocoll |   .0000342   .0000256     1.34   0.188    -.0000172    .0000856
+ share_somecoll |   .0000854   .0000335     2.55   0.014      .000018    .0001528
+ share_collprof |   .0000122   .0000291     0.42   0.678    -.0000464    .0000707
+  share_mastdoc |    .000024   .0000346     0.69   0.492    -.0000455    .0000935
+ share_nonwhite |  -.0001453   .0000364    -3.99   0.000    -.0002185   -.0000721
+share_emp_manuf |   .0000554   .0000499     1.11   0.272    -.0000448    .0001556
+---------------------------------------------------------------------------------
+Underidentification test (Kleibergen-Paap rk LM statistic):             12.017
+                                                   Chi-sq(1) P-val =    0.0005
+------------------------------------------------------------------------------
+Weak identification test (Cragg-Donald Wald F statistic):             3149.738
+                         (Kleibergen-Paap rk Wald F statistic):         28.748
+Stock-Yogo weak ID test critical values: 10% maximal IV size              7.03
+                                         15% maximal IV size              4.58
+                                         20% maximal IV size              3.95
+                                         25% maximal IV size              3.63
+Source: Stock-Yogo (2005).  Reproduced by permission.
+NB: Critical values are for Cragg-Donald F statistic and i.i.d. errors.
+------------------------------------------------------------------------------
+Hansen J statistic (overidentification test of all instruments):         0.000
+                                                 (equation exactly identified)
+------------------------------------------------------------------------------
+Instrumented:         er_us_emp06 interaction
+Included instruments: hhi_new share_male share_elder share_nocoll
+                      share_somecoll share_collprof share_mastdoc share_nonwhite
+                      share_emp_manuf
+Excluded instruments: er_eu ivinteraction
+Partialled-out:       _cons
+                      nb: total SS, model F and R2s are after partialling-out;
+                          any small-sample adjustments include partialled-out
+                          variables in regressor count K
+------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+-----------------------------------------------------+
+ Absorbed FE | Categories  - Redundant  = Num. Coefs |
+-------------+---------------------------------------|
+      occsoc |       446           0         446     |
+   czone2000 |       706         706           0    *|
+-----------------------------------------------------+
+* = FE nested within cluster; treated as redundant for DoF computation
+
+. 
+. ivreghdfe d_emp_ratio_0614 (er_us_emp06 interaction hhi_new=er_eu cmanuf_ehat cnocol
+> l_ehat ///
+>    ivinteraction4 ivinteraction5) $demographic, absorb(occsoc) cluster(state)
+(MWFE estimator converged in 1 iterations)
+
+IV (2SLS) estimation
+--------------------
+
+Estimates efficient for homoskedasticity only
+Statistics robust to heteroskedasticity and clustering on state
+
+Number of clusters (state) =        50                Number of obs =   126743
+                                                      F( 12,    49) =    34.17
+                                                      Prob > F      =   0.0000
+Total (centered) SS     =  .3729657684                Centered R2   =   0.0025
+Total (uncentered) SS   =  .3729657684                Uncentered R2 =   0.0025
+Residual SS             =    .37201534                Root MSE      =  .001716
+
+---------------------------------------------------------------------------------
+                |               Robust
+d_emp_rati~0614 |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+----------------+----------------------------------------------------------------
+    er_us_emp06 |  -.0000223   .0000117    -1.91   0.062    -.0000458    1.19e-06
+    interaction |   9.60e-10   1.58e-09     0.61   0.548    -2.22e-09    4.14e-09
+        hhi_new |  -6.72e-09   1.34e-08    -0.50   0.619    -3.37e-08    2.03e-08
+     share_male |  -.0000802   .0000199    -4.04   0.000    -.0001201   -.0000403
+    share_elder |   .0006079   .0000368    16.50   0.000     .0005339     .000682
+   share_nocoll |   .0000266   .0000276     0.96   0.340    -.0000289    .0000821
+ share_somecoll |   .0000814   .0000353     2.30   0.026     .0000104    .0001524
+ share_collprof |   7.38e-06   .0000284     0.26   0.796    -.0000496    .0000644
+  share_mastdoc |   .0000146   .0000346     0.42   0.676    -.0000551    .0000842
+ share_nonwhite |  -.0001305   .0000256    -5.09   0.000    -.0001819    -.000079
+share_emp_manuf |   .0000405   .0000469     0.86   0.392    -.0000537    .0001348
+      ln_cz_pop |   .0000292   .0000201     1.45   0.152    -.0000111    .0000696
+---------------------------------------------------------------------------------
+Underidentification test (Kleibergen-Paap rk LM statistic):             34.435
+                                                   Chi-sq(3) P-val =    0.0000
+------------------------------------------------------------------------------
+Weak identification test (Cragg-Donald Wald F statistic):              978.225
+                         (Kleibergen-Paap rk Wald F statistic):         13.138
+Stock-Yogo weak ID test critical values:  5% maximal IV relative bias     9.53
+                                         10% maximal IV relative bias     6.61
+                                         20% maximal IV relative bias     4.99
+                                         30% maximal IV relative bias     4.30
+Source: Stock-Yogo (2005).  Reproduced by permission.
+NB: Critical values are for Cragg-Donald F statistic and i.i.d. errors.
+------------------------------------------------------------------------------
+Hansen J statistic (overidentification test of all instruments):         7.314
+                                                   Chi-sq(2) P-val =    0.0258
+------------------------------------------------------------------------------
+Instrumented:         er_us_emp06 interaction hhi_new
+Included instruments: share_male share_elder share_nocoll share_somecoll
+                      share_collprof share_mastdoc share_nonwhite
+                      share_emp_manuf ln_cz_pop
+Excluded instruments: er_eu cmanuf_ehat cnocoll_ehat ivinteraction4
+                      ivinteraction5
+Partialled-out:       _cons
+                      nb: total SS, model F and R2s are after partialling-out;
+                          any small-sample adjustments include partialled-out
+                          variables in regressor count K
+------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+-----------------------------------------------------+
+ Absorbed FE | Categories  - Redundant  = Num. Coefs |
+-------------+---------------------------------------|
+      occsoc |       446           0         446     |
+-----------------------------------------------------+
+
+. ivreghdfe d_emp_ratio_0614 (er_us_emp06 interaction hhi_new=er_eu cmanuf_ehat cnocol
+> l_ehat ///
+>    ivinteraction4 ivinteraction5) share_*, absorb(occsoc czone2000) cluster(state)
+(MWFE estimator converged in 6 iterations)
+
+IV (2SLS) estimation
+--------------------
+
+Estimates efficient for homoskedasticity only
+Statistics robust to heteroskedasticity and clustering on state
+
+Number of clusters (state) =        50                Number of obs =   126743
+                                                      F( 11,    49) =    39.45
+                                                      Prob > F      =   0.0000
+Total (centered) SS     =  .3695926671                Centered R2   =   0.0016
+Total (uncentered) SS   =  .3695926671                Uncentered R2 =   0.0016
+Residual SS             =  .3689835316                Root MSE      =  .001709
+
+---------------------------------------------------------------------------------
+                |               Robust
+d_emp_rati~0614 |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+----------------+----------------------------------------------------------------
+    er_us_emp06 |  -.0000282    .000012    -2.35   0.023    -.0000524   -4.07e-06
+    interaction |   1.21e-09   1.60e-09     0.75   0.456    -2.02e-09    4.43e-09
+        hhi_new |  -9.89e-09   1.54e-08    -0.64   0.524    -4.08e-08    2.11e-08
+     share_male |  -.0000853   .0000179    -4.76   0.000    -.0001212   -.0000493
+    share_elder |   .0006118   .0000352    17.39   0.000     .0005411    .0006826
+   share_nocoll |   .0000351    .000026     1.35   0.183    -.0000171    .0000874
+ share_somecoll |   .0000859   .0000336     2.55   0.014     .0000183    .0001534
+ share_collprof |   .0000112   .0000291     0.39   0.701    -.0000472    .0000696
+  share_mastdoc |   .0000233   .0000345     0.68   0.502    -.0000459    .0000926
+ share_nonwhite |   -.000144   .0000366    -3.93   0.000    -.0002176   -.0000704
+share_emp_manuf |   .0000589   .0000503     1.17   0.248    -.0000422      .00016
+---------------------------------------------------------------------------------
+Underidentification test (Kleibergen-Paap rk LM statistic):             35.667
+                                                   Chi-sq(3) P-val =    0.0000
+------------------------------------------------------------------------------
+Weak identification test (Cragg-Donald Wald F statistic):              840.154
+                         (Kleibergen-Paap rk Wald F statistic):         16.884
+Stock-Yogo weak ID test critical values:  5% maximal IV relative bias     9.53
+                                         10% maximal IV relative bias     6.61
+                                         20% maximal IV relative bias     4.99
+                                         30% maximal IV relative bias     4.30
+Source: Stock-Yogo (2005).  Reproduced by permission.
+NB: Critical values are for Cragg-Donald F statistic and i.i.d. errors.
+------------------------------------------------------------------------------
+Hansen J statistic (overidentification test of all instruments):         8.392
+                                                   Chi-sq(2) P-val =    0.0151
+------------------------------------------------------------------------------
+Instrumented:         er_us_emp06 interaction hhi_new
+Included instruments: share_male share_elder share_nocoll share_somecoll
+                      share_collprof share_mastdoc share_nonwhite
+                      share_emp_manuf
+Excluded instruments: er_eu cmanuf_ehat cnocoll_ehat ivinteraction4
+                      ivinteraction5
+Partialled-out:       _cons
+                      nb: total SS, model F and R2s are after partialling-out;
+                          any small-sample adjustments include partialled-out
+                          variables in regressor count K
+------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+-----------------------------------------------------+
+ Absorbed FE | Categories  - Redundant  = Num. Coefs |
+-------------+---------------------------------------|
+      occsoc |       446           0         446     |
+   czone2000 |       706         706           0    *|
+-----------------------------------------------------+
+* = FE nested within cluster; treated as redundant for DoF computation
+
+. log close
+      name:  <unnamed>
+       log:  E:\Dropbox\Research\Ding's Proposal\WorkingFile\IPUMS\results\result_empt
+> opop_euIV.log
+  log type:  text
+ closed on:  22 Jan 2021, 13:26:12
+--------------------------------------------------------------------------------------
