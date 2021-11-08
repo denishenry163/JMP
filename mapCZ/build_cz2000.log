@@ -1,0 +1,221 @@
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+      name:  plog_1
+       log:  /Users/michael/Documents/git_repos/maptile_geo_templates/build/build_cz2000.log
+  log type:  text
+ opened on:  29 Jul 2017, 23:24:53
+
+. *! 29jul2017  Maithreyi Gopalan (smgopala@indiana.edu) and Michael Stepner (stepner@mit.edu)
+. 
+. * merges 2000 County shapefile into a 2000 CZ shapefile
+. 
+. /*******************************
+> 
+> ** INPUT FILES ** 
+> - cz00_eqv_v1.xls
+>         Downloaded on 2017-07-29 from https://www.ers.usda.gov/data-products/commuting-zones-and-labor-market-areas/
+>         
+> *******************************/
+. 
+. *** Step 0: Initialize
+. 
+. * Check if run using -project-
+. return clear
+
+. capture project, doinfo
+
+. if (_rc==0 & !mi(r(pname))) global root `r(pdir)'  // run using -project-
+
+. else {  // running directly
+. 
+.         global root "/Users/michael/Documents/git_repos/maptile_geo_templates/build"
+. 
+.         * Disable project (since running do-files directly)
+.         cap program drop project
+.         program define project
+.                 di "Project is disabled, skipping project command. (To re-enable, run -{stata program drop project}-)"
+.         end
+.         
+. }
+
+. 
+. * Specify subdirectories
+. global raw "$root/raw_data/cz2000"
+
+. global out "$root/geo_templates/cz2000"
+
+. global test "$root/tests/cz2000"
+
+. 
+. * Add utility programs to path
+. adopath ++ "$root/util"
+  [1]              "/Users/michael/Documents/git_repos/maptile_geo_templates/build/util"
+  [2]  (UPDATES)   "/Applications/Stata/ado/updates/"
+  [3]  (BASE)      "/Applications/Stata/ado/base/"
+  [4]  (SITE)      "/Applications/Stata/ado/site/"
+  [5]              "."
+  [6]  (PERSONAL)  "~/Library/Application Support/Stata/ado/personal/"
+  [7]  (PLUS)      "~/Library/Application Support/Stata/ado/plus/"
+  [8]  (OLDPLACE)  "~/ado/"
+
+. 
+. * Tell -project- that we use -save12-
+. project, original("$root/util/save12.ado")
+project build_cz2000 > do-file uses original: "util/save12.ado" filesig(2718885224:622)
+
+. 
+. * Tell -project- that we use -mergepoly- (obtained from SSC)
+. project, original("$root/util/mergepoly.ado")
+project build_cz2000 > do-file uses original: "util/mergepoly.ado" filesig(2147366178:9474)
+
+. project, original("$root/util/mergepoly.hlp")
+project build_cz2000 > do-file uses original: "util/mergepoly.hlp" filesig(2852734305:7068)
+
+. 
+. 
+. *** Step 1: Use 2000 County -> 2000 CZ crosswalk to merge CZ variable onto county database
+. project, original("$raw/cz00_eqv_v1.xls")
+project build_cz2000 > do-file uses original: "raw_data/cz2000/cz00_eqv_v1.xls" filesig(3945691847:517632)
+
+. import excel using "$raw/cz00_eqv_v1.xls", clear firstrow
+
+. keep FIPS CommutingZoneID2000
+
+. destring FIPS, replace
+FIPS has all characters numeric; replaced as long
+
+. rename FIPS county
+
+. rename CommutingZoneID2000 cz
+
+. 
+. project, original("$root/geo_templates/county2000/county2000_database.dta") preserve
+project build_cz2000 > do-file uses original: "geo_templates/county2000/county2000_database.dta" filesig(393769646:24698)
+
+. merge 1:m county using "$root/geo_templates/county2000/county2000_database.dta", assert(3) nogen
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+    matched                             3,399  
+    -----------------------------------------
+
+. compress
+  (0 bytes saved)
+
+. 
+. 
+. *** Step 2: Merge county polygons into CZs
+. 
+. project, original("$root/geo_templates/county2000/county2000_coords.dta") preserve
+project build_cz2000 > do-file uses original: "geo_templates/county2000/county2000_coords.dta" filesig(2345185836:14375009)
+
+. mergepoly id using "$root/geo_templates/county2000/county2000_coords.dta", ///
+>         coordinates("$out/cz2000_coords.dta") ///
+>         by(cz) replace
+Looping over 709 by-groups:
+----+--- 1 ---+--- 2 ---+--- 3 ---+--- 4 ---+--- 5 
+..................................................    50
+..................................................   100
+..................................................   150
+..................................................   200
+..................................................   250
+..................................................   300
+..................................................   350
+..................................................   400
+..................................................   450
+..................................................   500
+..................................................   550
+..................................................   600
+..................................................   650
+..................................................   700
+.........
+. save12 "$out/cz2000_database.dta", replace
+(saving in Stata 12 format, which can be read by Stata 11 or 12)
+file /Users/michael/Documents/git_repos/maptile_geo_templates/build/geo_templates/cz2000/cz2000_database.dta saved
+
+. project, creates("$out/cz2000_database.dta")
+project build_cz2000 > do-file creates: "geo_templates/cz2000/cz2000_database.dta" filesig(54922246:3350)
+
+. 
+. * Resave coords in Stata 12 format
+. use "$out/cz2000_coords.dta", clear
+
+. save12 "$out/cz2000_coords.dta", replace
+(saving in Stata 12 format, which can be read by Stata 11 or 12)
+file /Users/michael/Documents/git_repos/maptile_geo_templates/build/geo_templates/cz2000/cz2000_coords.dta saved
+
+. project, creates("$out/cz2000_coords.dta")
+project build_cz2000 > do-file creates: "geo_templates/cz2000/cz2000_coords.dta" filesig(1613806025:8247653)
+
+. 
+. 
+. *** Reference other files using -project-
+. project, relies_on("$root/readme.txt")
+project build_cz2000 > do-file relies on: "readme.txt" filesig(2581144236:573)
+
+. project, relies_on("$out/cz2000_maptile.ado")
+project build_cz2000 > do-file relies on: "geo_templates/cz2000/cz2000_maptile.ado" filesig(797612238:2837)
+
+. project, relies_on("$out/cz2000_maptile.md")
+project build_cz2000 > do-file relies on: "geo_templates/cz2000/cz2000_maptile.md" filesig(1604605019:1086)
+
+. project, relies_on("$out/cz2000_maptile.smcl")
+project build_cz2000 > do-file relies on: "geo_templates/cz2000/cz2000_maptile.smcl" filesig(4185708357:1247)
+
+. 
+. *** Test geo-specific options
+. use "$out/cz2000_database.dta", clear
+
+. rename id test
+
+. 
+. maptile test, geo(cz2000) geofolder($out) ///
+>         savegraph("$test/cz2000_noopt.png") resolution(0.25) replace
+(file /Users/michael/Documents/git_repos/maptile_geo_templates/build/tests/cz2000/cz2000_noopt.png written in PNG format)
+
+. project, creates("$test/cz2000_noopt.png") preserve
+project build_cz2000 > do-file creates: "tests/cz2000/cz2000_noopt.png" filesig(2887949409:189802)
+
+.         
+. maptile test, geo(cz2000) geofolder($out) ///
+>         conus ///
+>         savegraph("$test/cz2000_conus.png") resolution(0.25) replace
+(file /Users/michael/Documents/git_repos/maptile_geo_templates/build/tests/cz2000/cz2000_conus.png written in PNG format)
+
+. project, creates("$test/cz2000_conus.png") preserve
+project build_cz2000 > do-file creates: "tests/cz2000/cz2000_conus.png" filesig(2760861306:179721)
+
+. 
+. project, original("$root/geo_templates/state/state_coords_clean.dta") preserve
+project build_cz2000 > do-file uses original: "geo_templates/state/state_coords_clean.dta" filesig(2969291408:868121)
+
+. copy "$root/geo_templates/state/state_coords_clean.dta" "$out/state_coords_clean.dta"
+
+. 
+. maptile test, geo(cz2000) geofolder($out) ///
+>         stateoutline(medium) ///
+>         savegraph("$test/cz2000_stoutline.png") resolution(0.25) replace
+(file /Users/michael/Documents/git_repos/maptile_geo_templates/build/tests/cz2000/cz2000_stoutline.png written in PNG format)
+
+. project, creates("$test/cz2000_stoutline.png") preserve
+project build_cz2000 > do-file creates: "tests/cz2000/cz2000_stoutline.png" filesig(1514597215:208810)
+
+. 
+. maptile test, geo(cz2000) geofolder($out) ///
+>         conus stateoutline(medium) ///
+>         savegraph("$test/cz2000_conus_stoutline.png") resolution(0.25) replace
+(file /Users/michael/Documents/git_repos/maptile_geo_templates/build/tests/cz2000/cz2000_conus_stoutline.png written in PNG format)
+
+. project, creates("$test/cz2000_conus_stoutline.png") preserve
+project build_cz2000 > do-file creates: "tests/cz2000/cz2000_conus_stoutline.png" filesig(4031327795:197430)
+
+. 
+. erase "$out/state_coords_clean.dta"
+
+. 
+end of do-file
+      name:  plog_1
+       log:  /Users/michael/Documents/git_repos/maptile_geo_templates/build/build_cz2000.log
+  log type:  text
+ closed on:  29 Jul 2017, 23:27:00
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
